@@ -1,0 +1,5 @@
+.text-truncate {
+    white-space: nowrap; /* Evita el salto de línea */
+    overflow: hidden;    /* Oculta el desbordamiento */
+    text-overflow: ellipsis; /* Muestra el elipsis (...) al final */
+}

@@ -1,0 +1,80 @@
+<div class="container mt-4">
+  <h2 class="mb-3">Lista de Tareas</h2>
+  <div class="mb-3 d-flex flex-column flex-md-row justify-content-between align-items-center">
+    <ul class="nav nav-pills mb-3 mb-md-0 w-100" >
+        <li class="nav-item">
+            <a 
+                class="nav-link" 
+                [class.active]="currentFilter === 'all'" 
+                (click)="filterTasks('all'); currentFilter = 'all'">
+                Todas
+            </a>
+        </li>
+        <li class="nav-item">
+            <a 
+                class="nav-link" 
+                [class.active]="currentFilter === 'completed'" 
+                (click)="filterTasks('completed'); currentFilter = 'completed'">
+                Completadas
+            </a>
+        </li>
+        <li class="nav-item">
+            <a 
+                class="nav-link" 
+                [class.active]="currentFilter === 'pending'" 
+                (click)="filterTasks('pending'); currentFilter = 'pending'">
+                Pendientes
+            </a>
+        </li>
+    </ul>
+    
+    <div class="d-flex justify-content-end w-100">
+        <button class="btn btn-info me-2" (click)="deleteall()">
+            Eliminar Todas las Tareas
+        </button>
+        <ng-container *ngIf="!isvisible; else cancelbtn">
+            <button class="btn btn-success" (click)="isvisible = !isvisible">Crear Tarea</button>
+        </ng-container>
+        <ng-template #cancelbtn>
+            <button class="btn btn-danger" (click)="isvisible = !isvisible">Cancelar</button>
+        </ng-template>
+    </div>
+</div>
+
+  
+  <div *ngIf="isvisible">
+    <app-task-form></app-task-form>
+  </div>
+  
+  
+  
+  <div class="row">
+    <div class="col-md-4 mb-4" *ngFor="let task of filteredTasks$ | async">
+      <div class="card">
+        <div class="card-body">
+          <div class="form-check">
+            <input 
+                type="checkbox" 
+                class="form-check-input" 
+                [checked]="task.completed"
+                (click)="toggleTaskStatus(task)" 
+                 />
+            <label class="form-check-label">{{task.completed ? 'Completada' : 'Incompleta'}}</label>
+          </div>
+          <p class="card-title text-truncate" [ngClass]="{'text-truncate': task.title.length > 15}">
+            {{ task.title }} - {{ task.deadline | date }}
+          </p>
+          <div class="mt-3">
+            <strong>Personas Asociadas:</strong>
+            <ul class="list-unstyled">
+              <li *ngFor="let person of task.people">
+                {{ person.fullName }} ({{ person.age }})
+                <span *ngFor="let skill of person.skills" class="badge bg-secondary ms-1">{{ skill }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
